@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Rubberduck.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53174cb1425622c0c2366770fd9cd4dcdaaddf4d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e09df8b222eeb24e6610d1b18172c81e4cd577ca")]
 [assembly: System.Reflection.AssemblyProductAttribute("Rubberduck.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Rubberduck.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
