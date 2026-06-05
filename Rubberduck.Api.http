@@ -1,0 +1,6 @@
+@Rubberduck_HostAddress = http://localhost:5196
+
+GET {{Rubberduck_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
