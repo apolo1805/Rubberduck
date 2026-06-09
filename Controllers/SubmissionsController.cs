@@ -25,6 +25,8 @@ public class SubmissionsController : ControllerBase
     [HttpPost]
     public IActionResult CreateSubmission(Submission submission)
     {
+        submission.Id = Guid.NewGuid();
+        submission.CreatedAt = DateTime.UtcNow;
         _dbContext.Submissions.Add(submission);
         _dbContext.SaveChanges();
         return CreatedAtAction(nameof(GetSubmissions), new { id = submission.Id }, submission);
