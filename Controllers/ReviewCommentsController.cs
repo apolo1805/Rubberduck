@@ -25,10 +25,11 @@ public class ReviewCommentsController : ControllerBase
     [HttpPost]
     public IActionResult CreateReviewComment(ReviewComment reviewComment)
     {
+        reviewComment.Id = Guid.NewGuid();
         _dbContext.ReviewComments.Add(reviewComment);
         _dbContext.SaveChanges();
 
-        return CreatedAtAction(nameof(GetReviewComments), new { id = reviewComment.Id }, reviewComment);
+        return CreatedAtAction(nameof(GetReviewComment), new { id = reviewComment.Id }, reviewComment);
     }
 
     [HttpGet("{id}")]
@@ -64,7 +65,7 @@ public class ReviewCommentsController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult DeleteReivewComment(Guid id)
+    public IActionResult DeleteReviewComment(Guid id)
     {
         var reviewComment = _dbContext.ReviewComments.Find(id);
 

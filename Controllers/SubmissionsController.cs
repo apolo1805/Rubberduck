@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Rubberduck.Api;
 using Rubberduck.Api.Models;
 
@@ -29,13 +30,15 @@ public class SubmissionsController : ControllerBase
         submission.CreatedAt = DateTime.UtcNow;
         _dbContext.Submissions.Add(submission);
         _dbContext.SaveChanges();
-        return CreatedAtAction(nameof(GetSubmissions), new { id = submission.Id }, submission);
+        return CreatedAtAction(nameof(GetSubmission), new { id = submission.Id }, submission);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetSubmission(Guid id)
     {
-        var submission = _dbContext.Submissions.Find(id);
+        var submission = _dbContext.Submissions
+            .Include(s => s.ReviewComments)
+            .FirstOrDefault(s => s.Id == id);
 
         if (submission == null)
         {
@@ -44,8 +47,43 @@ public class SubmissionsController : ControllerBase
         return Ok(submission);
     }
 
+    [HttpGet("{id}/comments")]
+    public IActionResult GetSubmissionComments(Guid id)
+    {
+        var submission = _dbContext.Submissions.Find(id);
+
+        if (submission == null)
+        {
+            return NotFound();
+        }
+
+        var comments = _dbContext.ReviewComments
+            .Where(comment => comment.SubmissionId == id)
+            .ToList();
+
+        return Ok(comments);
+    }
+
+    [HttpPost("{id}/comments")]
+    public IActionResult CreateCommentForSubmission(Guid id, ReviewComment reviewComment)
+    {
+        var submission = _dbContext.Submissions.Find(id);
+
+        if (submission == null)
+        {
+            return NotFound();
+        }
+
+        reviewComment.Id = Guid.NewGuid();
+        reviewComment.SubmissionId = id;
+        _dbContext.ReviewComments.Add(reviewComment);
+        _dbContext.SaveChanges();
+
+        return CreatedAtAction("GetReviewComment", "ReviewComments", new { id = reviewComment.Id }, reviewComment);
+    }
+
     [HttpPut("{id}")]
-    public IActionResult UpdateSubmissions(Guid id, Submission updatedSubmission)
+    public IActionResult UpdateSubmission(Guid id, Submission updatedSubmission)
     {
         var submission = _dbContext.Submissions.Find(id);
 
@@ -57,6 +95,7 @@ public class SubmissionsController : ControllerBase
         submission.Title = updatedSubmission.Title;
         submission.Language = updatedSubmission.Language;
         submission.Code = updatedSubmission.Code;
+        submission.Status = updatedSubmission.Status;
         _dbContext.SaveChanges();
 
         return NoContent();
