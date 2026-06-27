@@ -3,23 +3,41 @@
   line-height: 1.5;
   font-weight: 400;
   color: #111827;
-  background: #f9fafb;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 40%, #e2e8f0 100%);
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  display: grid;
-  place-items: center;
+  color: #0f172a;
+  background: transparent;
 }
 
 .app {
-  padding: 2rem;
-  max-width: 720px;
-  width: 100%;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 2rem 1rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.hero {
+  color: #f8fafc;
+}
+
+.submission-card {
+  border: none;
+  overflow: hidden;
+}
+
+.submission-card .submission-code {
+  font-size: 0.95rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.comment-form textarea,
+.comment-form input,
+.comment-form select {
+  min-height: 52px;
 }
 
 .error {
