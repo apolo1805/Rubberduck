@@ -59,6 +59,13 @@ public class SubmissionsController : ControllerBase
 
         var comments = _dbContext.ReviewComments
             .Where(comment => comment.SubmissionId == id)
+            .Select(c => new {
+                id = c.Id,
+                submissionId = c.SubmissionId,
+                lineNumber = c.LineNumber,
+                content = c.Content,
+                severity = (int)c.Severity
+            })
             .ToList();
 
         return Ok(comments);
@@ -79,7 +86,15 @@ public class SubmissionsController : ControllerBase
         _dbContext.ReviewComments.Add(reviewComment);
         _dbContext.SaveChanges();
 
-        return CreatedAtAction("GetReviewComment", "ReviewComments", new { id = reviewComment.Id }, reviewComment);
+        var dto = new {
+            id = reviewComment.Id,
+            submissionId = reviewComment.SubmissionId,
+            lineNumber = reviewComment.LineNumber,
+            content = reviewComment.Content,
+            severity = (int)reviewComment.Severity
+        };
+
+        return CreatedAtAction("GetReviewComment", "ReviewComments", new { id = reviewComment.Id }, dto);
     }
 
     [HttpPut("{id}")]

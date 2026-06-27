@@ -17,7 +17,15 @@ public class ReviewCommentsController : ControllerBase
     [HttpGet]
     public IActionResult GetReviewComments()
     {
-        var reviewComments = _dbContext.ReviewComments.ToList();
+        var reviewComments = _dbContext.ReviewComments
+            .Select(c => new {
+                id = c.Id,
+                submissionId = c.SubmissionId,
+                lineNumber = c.LineNumber,
+                content = c.Content,
+                severity = (int)c.Severity
+            })
+            .ToList();
 
         return Ok(reviewComments);
     }
@@ -29,19 +37,36 @@ public class ReviewCommentsController : ControllerBase
         _dbContext.ReviewComments.Add(reviewComment);
         _dbContext.SaveChanges();
 
-        return CreatedAtAction(nameof(GetReviewComment), new { id = reviewComment.Id }, reviewComment);
+        var dto = new {
+            id = reviewComment.Id,
+            submissionId = reviewComment.SubmissionId,
+            lineNumber = reviewComment.LineNumber,
+            content = reviewComment.Content,
+            severity = (int)reviewComment.Severity
+        };
+
+        return CreatedAtAction(nameof(GetReviewComment), new { id = reviewComment.Id }, dto);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetReviewComment(Guid id)
     {
-        var reviewComment = _dbContext.ReviewComments.Find(id);
+        var reviewComment = _dbContext.ReviewComments
+            .Where(c => c.Id == id)
+            .Select(c => new {
+                id = c.Id,
+                submissionId = c.SubmissionId,
+                lineNumber = c.LineNumber,
+                content = c.Content,
+                severity = (int)c.Severity
+            })
+            .FirstOrDefault();
 
         if (reviewComment == null)
         {
             return NotFound();
         }
-        
+
         return Ok(reviewComment);
     }
 
