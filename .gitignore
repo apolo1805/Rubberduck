@@ -24,6 +24,12 @@ artifacts/
 ## ASP.NET
 wwwroot/lib/
 
+## Frontend
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.vite/
+/frontend/.env*
+
 ## SQLite databases
 *.db
 *.db-shm
