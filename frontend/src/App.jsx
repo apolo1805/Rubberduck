@@ -55,6 +55,24 @@ function App() {
     }
   };
 
+  const deleteSubmission = async (id) => {
+    setError('');
+
+    try {
+      const response = await fetch(`http://localhost:5196/Submissions/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete submission');
+      }
+
+      setSubmissions((current) => current.filter((submission) => submission.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div className="app">
       <h1>Rubberduck</h1>
@@ -89,6 +107,7 @@ function App() {
       <ul>
         {submissions.map((submission) => (
           <li key={submission.id}>
+            <button onClick={() => deleteSubmission(submission.id)}>X</button>
             <strong>{submission.title}</strong> — {submission.language}
           </li>
         ))}
